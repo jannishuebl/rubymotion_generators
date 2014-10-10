@@ -31,6 +31,8 @@ module RubymotionGenerators
       when 'svapp'
         generate_single_view_app_delegate
         generate_view_controller 'example'
+      when 'form'
+         generate_form_view_controller name
       else
         puts "Invalid template name '#{template_name}'"
         exit 1
@@ -65,6 +67,18 @@ module RubymotionGenerators
       template 'templates/table_view_cell.rb', output_path
       class_name = name.capitalize + "Cell"
       insert_into_file output_path, class_name, :after => 'class '
+    end
+
+    def generate_form_view_controller(name)
+      output_path_controller = "app/controllers/#{name.downcase}/#{name.downcase}_table_view_controller.rb"
+      output_path_form = "app/controllers/#{name.downcase}/#{name.downcase}_formula.rb"
+      template 'templates/form_view_controller.rb', output_path_controller
+      template 'templates/formula.rb', output_path_form
+      class_name_controller = name.capitalize + 'TableViewController'
+      class_name_formula = name.capitalize + 'Formula'
+      insert_into_file output_path_controller, class_name_controller, :after => 'class '
+      insert_into_file output_path_controller, class_name_formula, :after => 'super.initWithForm '
+      insert_into_file output_path_form, class_name_formula, :after => 'class '
     end
 
     def generate_tab_bar_app_delegate
