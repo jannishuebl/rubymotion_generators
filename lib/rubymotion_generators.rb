@@ -1,7 +1,15 @@
 require "rubymotion_generators/version"
 require 'thor'
-require 'active_support'
 
+class String
+  def underscore
+    self.gsub(/::/, '/').
+        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+        gsub(/([a-z\d])([A-Z])/,'\1_\2').
+        tr("-", "_").
+        downcase
+  end
+end
 module RubymotionGenerators
   class Core < Thor
     include Thor::Actions
@@ -71,12 +79,12 @@ module RubymotionGenerators
     end
 
     def generate_form_view_controller(name)
-      output_path_controller = "app/controllers/#{name.downcase}/#{name.downcase}_table_view_controller.rb"
-      output_path_form = "app/controllers/#{name.underscore}/#{name.downcase}_formula.rb"
+      output_path_controller = "app/controllers/#{name.underscore}/#{name.underscore}_table_view_controller.rb"
+      output_path_form = "app/controllers/#{name.underscore}/#{name.underscore}_formula.rb"
       template 'templates/form_view_controller.rb', output_path_controller
       template 'templates/formula.rb', output_path_form
-      class_name_controller = name.capitalize + 'TableViewController'
-      class_name_formula = name.capitalize + 'Formula'
+      class_name_controller = name + 'TableViewController'
+      class_name_formula = name + 'Formula'
       insert_into_file output_path_controller, class_name_controller, :after => 'class '
       insert_into_file output_path_controller, class_name_formula, :after => 'super.initWithForm '
       insert_into_file output_path_form, class_name_formula, :after => 'class '
