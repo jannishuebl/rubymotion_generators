@@ -1,5 +1,6 @@
 require "rubymotion_generators/version"
 require 'thor'
+require 'active_support'
 
 module RubymotionGenerators
   class Core < Thor
@@ -71,7 +72,7 @@ module RubymotionGenerators
 
     def generate_form_view_controller(name)
       output_path_controller = "app/controllers/#{name.downcase}/#{name.downcase}_table_view_controller.rb"
-      output_path_form = "app/controllers/#{name.downcase}/#{name.downcase}_formula.rb"
+      output_path_form = "app/controllers/#{name.underscore}/#{name.downcase}_formula.rb"
       template 'templates/form_view_controller.rb', output_path_controller
       template 'templates/formula.rb', output_path_form
       class_name_controller = name.capitalize + 'TableViewController'
